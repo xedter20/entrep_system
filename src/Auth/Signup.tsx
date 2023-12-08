@@ -11,18 +11,18 @@ import {
 import { Field, Form, Formik, FormikErrors, ErrorMessage } from 'formik';
 
 import { ReactElement } from 'react';
-import Button from '../components/Button';
-import Buttons from '../components/Buttons';
-import Divider from '../components/Divider';
-import CardBox from '../components/CardBox';
-import FormCheckRadio from '../components/Form/CheckRadio';
-import FormCheckRadioGroup from '../components/Form/CheckRadioGroup';
-import FormField from '../components/Form/Field';
-import FormFilePicker from '../components/Form/FilePicker';
+import Button from '../Component/Tailwind/Button';
+import Buttons from '../Component/Tailwind/Buttons';
+import Divider from '../Component/Tailwind/Divider';
+import CardBox from '../Component/Tailwind/CardBox';
+import FormCheckRadio from '../Component/Tailwind/Form/CheckRadio';
+import FormCheckRadioGroup from '../Component/Tailwind/Form/CheckRadioGroup';
+import FormField from '../Component/Tailwind/Form/Field';
+import FormFilePicker from '../Component/Tailwind/Form/FilePicker';
 
-import SectionMain from '../components/Section/Main';
-import SectionTitle from '../components/Section/Title';
-import SectionTitleLineWithButton from '../components/Section/TitleLineWithButton';
+import SectionMain from '../Component/Tailwind/Section/Main';
+import SectionTitle from '../Component/Tailwind/Section/Title';
+import SectionTitleLineWithButton from '../Component/Tailwind/Section/TitleLineWithButton';
 
 import { object, string, ref, number } from 'yup';
 const RegisterValidation = object().shape({

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getButtonColor } from '../colors';
+import { getButtonColor } from './colors';
 import Icon from './Icon';
-import type { ColorButtonKey } from '../interfaces';
+import type { ColorButtonKey } from './interfaces';
 
 type Props = {
   label?: string;

@@ -11,18 +11,18 @@ import {
 } from '@mdi/js';
 import { Field, Form, Formik, FormikErrors, ErrorMessage } from 'formik';
 import { ReactElement } from 'react';
-import Button from '../components/Button';
-import Buttons from '../components/Buttons';
-import Divider from '../components/Divider';
-import CardBox from '../components/CardBox';
-import FormCheckRadio from '../components/Form/CheckRadio';
-import FormCheckRadioGroup from '../components/Form/CheckRadioGroup';
-import FormField from '../components/Form/Field';
-import FormFilePicker from '../components/Form/FilePicker';
+import Button from './../Component/Tailwind/Button';
+import Buttons from '../Component/Tailwind/Buttons';
+import Divider from '../Component/Tailwind/Divider';
+import CardBox from '../Component/Tailwind/CardBox';
+import FormCheckRadio from '../Component/Tailwind/Form/CheckRadio';
+import FormCheckRadioGroup from '../Component/Tailwind/Form/CheckRadioGroup';
+import FormField from '../Component/Tailwind/Form/Field';
+import FormFilePicker from '../Component/Tailwind/Form/FilePicker';
 
-import SectionMain from '../components/Section/Main';
-import SectionTitle from '../components/Section/Title';
-import SectionTitleLineWithButton from '../components/Section/TitleLineWithButton';
+import SectionMain from '../Component/Tailwind/Section/Main';
+import SectionTitle from '../Component/Tailwind/Section/Title';
+import SectionTitleLineWithButton from '../Component/Tailwind/Section/TitleLineWithButton';
 
 import { useNavigate } from 'react-router-dom';
 import {
@@ -52,43 +52,6 @@ function Login() {
   const [password, setPassword] = useState('');
   const [userEmail, setUserEmail] = useState('');
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, user => {
-      if (user) {
-        setUserEmail(user.email || '');
-      } else {
-        setUserEmail('');
-      }
-    });
-    return unsubscribe;
-  }, []);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    setLoader(true);
-    e.preventDefault();
-    if (!validateEmail(email)) {
-      setError('Invalid email');
-      setLoader(false);
-      return;
-    }
-    if (!validatePassword(password)) {
-      setError(
-        'Password must be at least 8 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 digit, and 1 special character'
-      );
-      setLoader(false);
-      return;
-    }
-    try {
-      const { user } = await signInWithEmailAndPassword(auth, email, password);
-      const token = await user.getIdToken();
-      localStorage.setItem('token', token);
-      navigate('/dashboard');
-      setLoader(false);
-    } catch (err: any) {
-      CommonError(error);
-    }
-  };
-
   const handleGoogleLogin = async () => {
     setLoader(true);
     const provider = new GoogleAuthProvider();
@@ -99,23 +62,8 @@ function Login() {
       navigate('/dashboard');
       setLoader(false);
     } catch (error: any) {
-      CommonError(error);
+      // CommonError(error);
     }
-  };
-
-  const CommonError = (err: any) => {
-    setError(err.message);
-    setLoader(false);
-  };
-
-  const validateEmail = (email: string) => {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
-  };
-
-  const validatePassword = (password: string) => {
-    const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
-    return re.test(password);
   };
 
   return (
@@ -134,22 +82,29 @@ function Login() {
                   password: ''
                 }}
                 validationSchema={RegisterValidation}
-                onSubmit={values => alert(JSON.stringify(values, null, 2))}>
+                onSubmit={async values => {
+                  const { user } = await signInWithEmailAndPassword(
+                    auth,
+                    values.email,
+                    values.password
+                  );
+                  const token = await user.getIdToken();
+
+                  localStorage.setItem('token', token);
+                  navigate('/dashboard');
+                  setLoader(false);
+                }}>
                 {({ validateOnBlur, errors, touched }) => {
                   console.log({ errors });
                   return (
-                    <Form>
+                    <Form className="space-y-4 md:space-y-6">
                       <FormField
                         label="Email"
                         labelFor="email"
                         icons={[mdiPhone, mdiMail]}
                         errors={errors.email}
                         isTouched={touched.email}
-                        help={errors.email}
-                        // hasError={!!errors.email}
-                        // error={errors.email}
-                        // help="Help line comes here"
-                      >
+                        help={errors.email}>
                         <Field
                           type="email"
                           name="email"
@@ -163,20 +118,36 @@ function Login() {
                         icons={[mdiLock, mdiLock]}
                         errors={errors.password}
                         isTouched={touched.password}
-                        help={errors.password}
-                        // hasError={!!errors.password}
-                        // error={errors.password}
-                      >
+                        help={errors.password}>
                         <Field
                           label="Password"
                           type="password"
                           name="password"
                           placeholder="Password"
-                          // hasError={!!errors.password}
-                          // error={errors.password}
                         />
                       </FormField>
-
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-start">
+                          <div className="flex items-center h-5">
+                            <input
+                              id="remember"
+                              aria-describedby="remember"
+                              type="checkbox"
+                              className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                            />
+                          </div>
+                          <div className="ml-3 text-sm">
+                            <label className="text-gray-500 dark:text-gray-300">
+                              Remember me
+                            </label>
+                          </div>
+                        </div>
+                        <a
+                          href="forgotpassword"
+                          className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
+                          Forgot password?
+                        </a>
+                      </div>
                       <Buttons>
                         <Button
                           type="submit"
